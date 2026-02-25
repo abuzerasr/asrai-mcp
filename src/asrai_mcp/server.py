@@ -279,6 +279,12 @@ async def call_tool(name: str, arguments: dict):
 
 
 def main():
+    from dotenv import load_dotenv
+    import os
+    # Try ~/.env first (home dir), then fall back to cwd
+    load_dotenv(dotenv_path=os.path.expanduser("~/.env"))
+    load_dotenv()  # also check cwd as fallback
+
     async def _run():
         async with stdio_server() as (r, w):
             await app.run(r, w, app.create_initialization_options())

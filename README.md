@@ -2,65 +2,90 @@
 
 Crypto market analysis tools for AI agents, powered by the Asrai API.
 Pay-per-use via [x402](https://x402.org) — no subscriptions, no API keys.
-Each tool call costs $0.05 USDC (or $0.10 for `ask_ai`) on Base mainnet.
+Each API endpoint costs **$0.05 USDC** on Base mainnet ($0.10 for `ask_ai`).
 
 ## Install
 
 ```bash
 pip install asrai-mcp
-# or with uvx (no install needed):
-uvx asrai-mcp
 ```
 
 ## Setup
 
-You need an Ethereum wallet funded with USDC on Base mainnet.
+**Step 1 — Create a `.env` file** with your wallet private key:
+
+| OS | File location |
+|---|---|
+| macOS / Linux | `~/.env` (i.e. `/Users/yourname/.env`) |
+| Windows | `C:\Users\yourname\.env` |
+
+File contents:
+```
+PRIVATE_KEY=0x<your_private_key>
+```
+
+> You need an Ethereum wallet funded with USDC on Base mainnet.
+
+---
+
+**Step 2 — Add to your AI client config:**
 
 ### Claude Desktop
 
-Add to `~/.claude/claude_desktop_config.json`:
+Config file location:
 
+| OS | Path |
+|---|---|
+| macOS | `~/Library/Application Support/Claude/claude_desktop_config.json` |
+| Windows | `%APPDATA%\Claude\claude_desktop_config.json` |
+| Linux | `~/.config/Claude/claude_desktop_config.json` |
+
+Add this:
 ```json
 {
   "mcpServers": {
     "asrai": {
-      "command": "uvx",
-      "args": ["asrai-mcp"],
-      "env": {
-        "PRIVATE_KEY": "0x<your_private_key>"
-      }
+      "command": "asrai-mcp"
     }
   }
 }
 ```
 
-### Any other MCP client
+### Cursor / Windsurf / any MCP client
 
-```bash
-PRIVATE_KEY=0x<your_key> asrai-mcp
-```
+Same config block above, add it to the MCP settings of your client.
+
+---
+
+**Step 3 — Restart your AI client** and ask:
+
+> "What's the market sentiment right now?"
+
+The agent picks the right tools automatically and pays via x402.
+
+---
 
 ## Available Tools
 
-| Tool | Description | Cost |
-|---|---|---|
-| `market_overview` | Trending, gainers/losers, RSI, top/bottom signals | $0.20 |
-| `technical_analysis` | ALSAT, SuperALSAT, PSAR, MACD-DEMA, AlphaTrend for a coin | $0.30 |
-| `sentiment` | CBBI, CMC sentiment, CMC AI insights | $0.15 |
-| `forecast` | 3-7 day AI price forecast for a coin | $0.05 |
-| `screener` | Run screeners: ichimoku-trend, sar-coins, macd-coins, volume, etc. | $0.05 |
-| `smart_money` | SMC analysis: order blocks, FVGs, liquidity zones | $0.10 |
-| `elliott_wave` | Elliott Wave analysis and targets | $0.05 |
-| `ichimoku` | Ichimoku cloud analysis | $0.05 |
-| `cashflow` | Capital flow: market-wide, per coin, or group | $0.05 |
-| `coin_info` | Market cap, supply, social stats for a coin | $0.10 |
-| `dexscreener` | DEX data by contract address | $0.05 |
-| `channel_summary` | Latest crypto narratives from monitored channels | $0.05 |
-| `ask_ai` | Freeform question to the Asrai AI analyst | $0.10 |
+| Tool | Endpoints called |
+|---|---|
+| `market_overview` | `/trending`, `/gainers-losers`, `/rsi`, `/top-bottom` |
+| `technical_analysis` | `/signal`, `/alsat`, `/superalsat`, `/psar`, `/macd-dema`, `/alphatrend`, `/td` |
+| `sentiment` | `/cbbi`, `/cmc-sentiment`, `/cmcai` |
+| `forecast` | `/forecasting/{symbol}` |
+| `screener` | `/ichimoku-trend`, `/sar-coins`, `/macd-coins`, `/emacross`, `/techrating`, `/vwap`, `/volume`, `/highvolumelowcap`, `/bounce-dip`, `/galaxyscore`, `/socialdominance`, `/late-unlocked-coins`, `/ath`, `/rsi`, `/rsi-heatmap`, `/ao` |
+| `smart_money` | `/smartmoney`, `/support-resistance` |
+| `elliott_wave` | `/ew/{symbol}` |
+| `ichimoku` | `/ichimoku/{symbol}` |
+| `cashflow` | `/cashflow/market`, `/cashflow/coin`, `/cashflow/group` |
+| `coin_info` | `/coinstats`, `/info`, `/price`, `/tags` |
+| `dexscreener` | `/dexscreener/{address}` |
+| `chain_tokens` | `/chain/{chain}/{max_mcap}` |
+| `portfolio` | `/portfolio` |
+| `channel_summary` | `/channel-summary` |
+| `ask_ai` | `/ai` ($0.10) |
 
-## Usage Examples
-
-Once installed, just ask your AI agent naturally:
+## Example Prompts
 
 - "What's moving in crypto today?"
 - "Give me full TA on ETH daily"
@@ -69,8 +94,6 @@ Once installed, just ask your AI agent naturally:
 - "Run the volume screener"
 - "What's the market sentiment right now?"
 - "Forecast BTC for the next week"
-
-The agent picks the right tools automatically and pays via x402.
 
 ## Network
 

@@ -31,8 +31,7 @@ def _get_account():
 
 async def _get(path: str) -> dict | list | str:
     _check_spend(0.05)
-    account = _get_account()
-    async with x402HttpxClient(account=account, base_url=BASE_URL, timeout=60.0) as client:
+    async with x402HttpxClient(account=_get_account(), base_url=BASE_URL, timeout=60.0) as client:
         r = await client.get(path, headers=X402_HEADERS)
         raw = (await r.aread()).decode()
         try:
@@ -43,8 +42,7 @@ async def _get(path: str) -> dict | list | str:
 
 async def _post(path: str, body: dict) -> dict | list | str:
     _check_spend(0.10)
-    account = _get_account()
-    async with x402HttpxClient(account=account, base_url=BASE_URL, timeout=60.0) as client:
+    async with x402HttpxClient(account=_get_account(), base_url=BASE_URL, timeout=60.0) as client:
         r = await client.post(path, json=body, headers=X402_HEADERS)
         raw = (await r.aread()).decode()
         try:
