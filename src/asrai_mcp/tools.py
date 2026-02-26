@@ -190,3 +190,6 @@ async def channel_summary() -> str:
 async def ask_ai(question: str) -> str:
     data = await _post("/ai", {"message": question})
     return json.dumps(data, indent=2)
+
+
+from asrai_mcp.indicators_guide import indicator_guide  # noqa: F401

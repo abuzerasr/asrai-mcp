@@ -229,6 +229,32 @@ TOOLS = [
             "required": ["question"],
         },
     ),
+    Tool(
+        name="indicator_guide",
+        description=(
+            "Reference guide for Asrai-specific indicators. FREE — no payment. "
+            "WHEN TO CALL: only when you encounter an unfamiliar indicator name in tool output "
+            "(e.g. ALSAT, SuperALSAT, AlphaTrend, PMax, MavilimW). "
+            "DO NOT call automatically — only on demand. "
+            "Standard indicators (RSI, MACD, Ichimoku, Elliott Wave, BB) are well-known, skip them. "
+            "indicator='' or 'list' → compact 1-line summary of all indicators (~400 tokens). "
+            "indicator='ALSAT' → full detail for that specific indicator (~500 tokens). "
+            "indicator='all' → full guide for everything (~5800 tokens, avoid unless necessary)."
+        ),
+        inputSchema={
+            "type": "object",
+            "properties": {
+                "indicator": {
+                    "type": "string",
+                    "description": (
+                        "Indicator name to look up: 'ALSAT', 'SuperALSAT', 'AlphaTrend', 'PMax', 'PSAR', 'TD9', 'SMC', etc. "
+                        "Empty or 'list' = compact summary of all. 'all' = full guide (expensive)."
+                    ),
+                },
+            },
+            "required": [],
+        },
+    ),
 ]
 
 
@@ -272,6 +298,8 @@ async def call_tool(name: str, arguments: dict):
         result = await tools.channel_summary()
     elif name == "ask_ai":
         result = await tools.ask_ai(arguments.get("question", ""))
+    elif name == "indicator_guide":
+        result = await tools.indicator_guide(arguments.get("indicator", ""))
     else:
         result = json.dumps({"error": f"Unknown tool: {name}"})
 
