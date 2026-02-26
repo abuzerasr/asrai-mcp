@@ -268,40 +268,43 @@ async def call_tool(name: str, arguments: dict):
     symbol = arguments.get("symbol", "")
     timeframe = arguments.get("timeframe", "1D")
 
-    if name == "market_overview":
-        result = await tools.market_overview()
-    elif name == "technical_analysis":
-        result = await tools.technical_analysis(symbol, timeframe)
-    elif name == "sentiment":
-        result = await tools.sentiment()
-    elif name == "forecast":
-        result = await tools.forecast(symbol)
-    elif name == "screener":
-        result = await tools.screener(arguments.get("screener_type", ""))
-    elif name == "smart_money":
-        result = await tools.smart_money(symbol, timeframe)
-    elif name == "elliott_wave":
-        result = await tools.elliott_wave(symbol, timeframe)
-    elif name == "ichimoku":
-        result = await tools.ichimoku(symbol, timeframe)
-    elif name == "cashflow":
-        result = await tools.cashflow(arguments.get("mode", "market"), symbol)
-    elif name == "coin_info":
-        result = await tools.coin_info(symbol)
-    elif name == "dexscreener":
-        result = await tools.dexscreener(arguments.get("contract_address", ""), arguments.get("chain", ""))
-    elif name == "chain_tokens":
-        result = await tools.chain_tokens(arguments.get("chain", ""), arguments.get("max_mcap", ""))
-    elif name == "portfolio":
-        result = await tools.portfolio(arguments.get("symbol", ""))
-    elif name == "channel_summary":
-        result = await tools.channel_summary()
-    elif name == "ask_ai":
-        result = await tools.ask_ai(arguments.get("question", ""))
-    elif name == "indicator_guide":
-        result = await tools.indicator_guide(arguments.get("indicator", ""))
-    else:
-        result = json.dumps({"error": f"Unknown tool: {name}"})
+    try:
+        if name == "market_overview":
+            result = await asyncio.wait_for(tools.market_overview(), timeout=55)
+        elif name == "technical_analysis":
+            result = await asyncio.wait_for(tools.technical_analysis(symbol, timeframe), timeout=55)
+        elif name == "sentiment":
+            result = await asyncio.wait_for(tools.sentiment(), timeout=55)
+        elif name == "forecast":
+            result = await asyncio.wait_for(tools.forecast(symbol), timeout=55)
+        elif name == "screener":
+            result = await asyncio.wait_for(tools.screener(arguments.get("screener_type", "")), timeout=55)
+        elif name == "smart_money":
+            result = await asyncio.wait_for(tools.smart_money(symbol, timeframe), timeout=55)
+        elif name == "elliott_wave":
+            result = await asyncio.wait_for(tools.elliott_wave(symbol, timeframe), timeout=55)
+        elif name == "ichimoku":
+            result = await asyncio.wait_for(tools.ichimoku(symbol, timeframe), timeout=55)
+        elif name == "cashflow":
+            result = await asyncio.wait_for(tools.cashflow(arguments.get("mode", "market"), symbol), timeout=55)
+        elif name == "coin_info":
+            result = await asyncio.wait_for(tools.coin_info(symbol), timeout=55)
+        elif name == "dexscreener":
+            result = await asyncio.wait_for(tools.dexscreener(arguments.get("contract_address", ""), arguments.get("chain", "")), timeout=55)
+        elif name == "chain_tokens":
+            result = await asyncio.wait_for(tools.chain_tokens(arguments.get("chain", ""), arguments.get("max_mcap", "")), timeout=55)
+        elif name == "portfolio":
+            result = await asyncio.wait_for(tools.portfolio(arguments.get("symbol", "")), timeout=55)
+        elif name == "channel_summary":
+            result = await asyncio.wait_for(tools.channel_summary(), timeout=55)
+        elif name == "ask_ai":
+            result = await asyncio.wait_for(tools.ask_ai(arguments.get("question", "")), timeout=55)
+        elif name == "indicator_guide":
+            result = await tools.indicator_guide(arguments.get("indicator", ""))
+        else:
+            result = json.dumps({"error": f"Unknown tool: {name}"})
+    except asyncio.TimeoutError:
+        result = json.dumps({"error": "Request timed out. The API is slow right now — try again in a moment."})
 
     return [TextContent(type="text", text=result)]
 

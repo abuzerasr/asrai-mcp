@@ -2,7 +2,7 @@
 
 Crypto market analysis tools for AI agents, powered by the Asrai API.
 Pay-per-use via [x402](https://x402.org) — no subscriptions, no API keys.
-Each API endpoint costs **$0.05 USDC** on Base mainnet ($0.10 for `ask_ai`).
+Each API endpoint costs **$0.001 USDC** on Base mainnet ($0.002 for `ask_ai`).
 
 ## Install
 
@@ -83,7 +83,7 @@ The agent picks the right tools automatically and pays via x402.
 | `chain_tokens` | `/chain/{chain}/{max_mcap}` |
 | `portfolio` | `/portfolio` |
 | `channel_summary` | `/channel-summary` |
-| `ask_ai` | `/ai` ($0.10) |
+| `ask_ai` | `/ai` ($0.0020) |
 
 ## Example Prompts
 

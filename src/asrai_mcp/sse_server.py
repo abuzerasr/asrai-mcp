@@ -117,7 +117,7 @@ async def generate_wallet(request: Request):
 
 
 async def health(request: Request):
-    return JSONResponse({"status": "ok", "server": "asrai-mcp-sse", "version": "0.4.1"})
+    return JSONResponse({"status": "ok", "server": "asrai-mcp-sse", "version": "0.4.3"})
 
 
 @contextlib.asynccontextmanager
