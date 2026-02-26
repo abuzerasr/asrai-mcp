@@ -1,4 +1,5 @@
 import asyncio
+import contextvars
 import json
 import os
 from eth_account import Account
@@ -7,22 +8,30 @@ from x402.clients.httpx import x402HttpxClient
 BASE_URL = "https://x402.asrai.me"
 X402_HEADERS = {"x-coinbase-402": "true", "x-payment-token": "usdc"}
 
-# Session-level spend tracker — resets when process restarts
-_session_spend = 0.0
-MAX_SESSION_SPEND = float(os.environ.get("ASRAI_MAX_SPEND", "2.0"))  # default $2 per session
+# Per-connection state via ContextVar — works for both stdio (single-user)
+# and SSE (multi-user) modes without any code changes to tools.
+_current_account: contextvars.ContextVar = contextvars.ContextVar("current_account", default=None)
+_connection_spend: contextvars.ContextVar = contextvars.ContextVar("connection_spend", default=0.0)
 
 
 def _check_spend(amount: float):
-    global _session_spend
-    _session_spend += amount
-    if _session_spend > MAX_SESSION_SPEND:
+    max_s = float(os.environ.get("ASRAI_MAX_SPEND", "2.0"))
+    current = _connection_spend.get(0.0)
+    new_total = current + amount
+    _connection_spend.set(new_total)
+    if new_total > max_s:
         raise ValueError(
-            f"Session spend limit of ${MAX_SESSION_SPEND} USDC reached. "
+            f"Session spend limit of ${max_s} USDC reached. "
             f"Set ASRAI_MAX_SPEND env var to increase."
         )
 
 
 def _get_account():
+    # SSE multi-user mode: account set per-connection by sse_server.py
+    ctx_account = _current_account.get(None)
+    if ctx_account:
+        return ctx_account
+    # Stdio mode (Claude Desktop / openclaw): read from env as before
     key = os.environ.get("PRIVATE_KEY")
     if not key:
         raise ValueError("PRIVATE_KEY environment variable is required")

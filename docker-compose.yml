@@ -1,0 +1,21 @@
+services:
+  asrai-mcp-server:
+    build: .
+    image: asrai-mcp-server
+    container_name: asrai_mcp_server
+    environment:
+      - ASRAI_HOST=0.0.0.0
+      - ASRAI_PORT=8402
+      - ASRAI_MAX_SPEND=5.0     # max USDC per session
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8402/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - nginx_network
+
+networks:
+  nginx_network:
+    external: true
