@@ -61,11 +61,14 @@ async def _post(path: str, body: dict) -> dict | list | str:
 
 
 async def _gather(*paths: str) -> dict:
-    results = await asyncio.gather(*[_get(p) for p in paths], return_exceptions=True)
-    return {
-        path: (str(result) if isinstance(result, Exception) else result)
-        for path, result in zip(paths, results)
-    }
+    # Sequential to avoid x402 parallel payment conflicts from same wallet
+    results = {}
+    for path in paths:
+        try:
+            results[path] = await _get(path)
+        except Exception as e:
+            results[path] = str(e)
+    return results
 
 
 # ---------------------------------------------------------------------------
