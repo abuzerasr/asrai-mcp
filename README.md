@@ -2,47 +2,57 @@
 
 Crypto market analysis tools for AI agents, powered by the Asrai API.
 Pay-per-use via [x402](https://x402.org) — no subscriptions, no API keys.
-Each API endpoint costs **$0.001 USDC** on Base mainnet ($0.002 for `ask_ai`).
+Each request costs **$0.001 USDC** on Base mainnet ($0.002 for `ask_ai`).
 
 ## Install
 
-Three options — pick one:
-
+**Option 1 — uvx (recommended, no permanent install):**
 ```bash
-# Option 1 — npx (recommended, no install needed — requires Node.js)
-npx -y asrai-mcp
+# Install uv once (if you don't have it)
+curl -LsSf https://astral.sh/uv/install.sh | sh
 
-# Option 2 — uvx (no install needed — requires uv)
+# Run — downloads and starts automatically
 uvx asrai-mcp
-
-# Option 3 — pip (traditional)
-pip install asrai-mcp
 ```
+
+**Option 2 — pip:**
+```bash
+pip install asrai-mcp
+asrai-mcp
+```
+
+**Option 3 — npx (launcher for uvx, requires both Node.js and uv):**
+```bash
+npx -y asrai-mcp
+```
+
+---
 
 ## Setup
 
-**Step 1 — Set your wallet private key**
+**Step 1 — Get a wallet with USDC on Base mainnet**
 
-Either create a `.env` file:
+You need an Ethereum wallet funded with USDC on Base mainnet.
+Export your private key (starts with `0x`).
+
+**Step 2 — Set your private key**
+
+Either via `.env` file:
 
 | OS | File location |
 |---|---|
-| macOS / Linux | `~/.env` or `.env` in your project |
+| macOS / Linux | `~/.env` or `.env` in project directory |
 | Windows | `C:\Users\yourname\.env` |
 
 ```
 PRIVATE_KEY=0x<your_private_key>
 ```
 
-Or pass it inline in the config (see below).
-
-> You need an Ethereum wallet funded with USDC on Base mainnet.
+Or pass it directly in the Claude Desktop config (see below).
 
 ---
 
-**Step 2 — Add to your AI client config:**
-
-### Claude Desktop
+## Claude Desktop Config
 
 Config file location:
 
@@ -52,32 +62,32 @@ Config file location:
 | Windows | `%APPDATA%\Claude\claude_desktop_config.json` |
 | Linux | `~/.config/Claude/claude_desktop_config.json` |
 
-**Option A — npx with key inline (recommended, no Python needed):**
+**Option A — uvx with key inline (recommended):**
 ```json
 {
   "mcpServers": {
     "asrai": {
-      "command": "npx",
-      "args": ["-y", "asrai-mcp"],
+      "command": "uvx",
+      "args": ["asrai-mcp"],
       "env": { "PRIVATE_KEY": "0x<YOUR_PRIVATE_KEY>" }
     }
   }
 }
 ```
 
-**Option A2 — npx with .env file (key stored separately):**
+**Option B — uvx with .env file (key stored separately):**
 ```json
 {
   "mcpServers": {
     "asrai": {
-      "command": "npx",
-      "args": ["-y", "asrai-mcp"]
+      "command": "uvx",
+      "args": ["asrai-mcp"]
     }
   }
 }
 ```
 
-**Option B — Remote HTTP Streamable (no local install at all):**
+**Option C — Remote (no local install at all):**
 ```json
 {
   "mcpServers": {
@@ -89,12 +99,13 @@ Config file location:
 }
 ```
 
-**Option C — pip install (classic):**
+**Option D — pip install:**
 ```json
 {
   "mcpServers": {
     "asrai": {
-      "command": "asrai-mcp"
+      "command": "asrai-mcp",
+      "env": { "PRIVATE_KEY": "0x<YOUR_PRIVATE_KEY>" }
     }
   }
 }
@@ -102,9 +113,7 @@ Config file location:
 
 ### Cursor / Windsurf / any MCP client
 
-Same config blocks above — add to the MCP settings of your client.
-
----
+Same config blocks above — paste into your MCP settings.
 
 **Step 3 — Restart your AI client** and ask:
 
@@ -116,23 +125,24 @@ The agent picks the right tools automatically and pays via x402.
 
 ## Available Tools
 
-| Tool | Endpoints called |
+| Tool | What it does |
 |---|---|
-| `market_overview` | `/trending`, `/gainers-losers`, `/rsi`, `/top-bottom` |
-| `technical_analysis` | `/signal`, `/alsat`, `/superalsat`, `/psar`, `/macd-dema`, `/alphatrend`, `/td` |
-| `sentiment` | `/cbbi`, `/cmc-sentiment`, `/cmcai` |
-| `forecast` | `/forecasting/{symbol}` |
-| `screener` | `/ichimoku-trend`, `/sar-coins`, `/macd-coins`, `/emacross`, `/techrating`, `/vwap`, `/volume`, `/highvolumelowcap`, `/bounce-dip`, `/galaxyscore`, `/socialdominance`, `/late-unlocked-coins`, `/ath`, `/rsi`, `/rsi-heatmap`, `/ao` |
-| `smart_money` | `/smartmoney`, `/support-resistance` |
-| `elliott_wave` | `/ew/{symbol}` |
-| `ichimoku` | `/ichimoku/{symbol}` |
-| `cashflow` | `/cashflow/market`, `/cashflow/coin`, `/cashflow/group` |
-| `coin_info` | `/coinstats`, `/info`, `/price`, `/tags` |
-| `dexscreener` | `/dexscreener/{address}` |
-| `chain_tokens` | `/chain/{chain}/{max_mcap}` |
-| `portfolio` | `/portfolio` |
-| `channel_summary` | `/channel-summary` |
-| `ask_ai` | `/ai` ($0.0020) |
+| `market_overview` | Trending coins, top gainers/losers, RSI extremes |
+| `technical_analysis` | Full TA: ALSAT, SuperALSAT, PSAR, MACD-DEMA, AlphaTrend, TD |
+| `sentiment` | CBBI, CMC sentiment, CMC AI insights |
+| `forecast` | 3–7 day price forecast with confidence |
+| `screener` | Find coins by 13+ criteria (Ichimoku, SAR, MACD, RSI, volume...) |
+| `smart_money` | Order blocks, FVG, liquidity zones, support/resistance |
+| `elliott_wave` | Elliott Wave count and targets |
+| `ichimoku` | Ichimoku cloud analysis |
+| `cashflow` | Capital flow by market / coin / group |
+| `coin_info` | Market cap, volume, supply, social stats |
+| `dexscreener` | DEX liquidity, volume, buys/sells |
+| `chain_tokens` | Tokens on a chain filtered by market cap |
+| `portfolio` | Portfolio analysis |
+| `channel_summary` | Latest crypto news and narratives |
+| `ask_ai` | Freeform question to Asrai AI analyst ($0.002) |
+| `indicator_guide` | FREE — reference guide for Asrai indicators |
 
 ## Example Prompts
 
@@ -144,9 +154,11 @@ The agent picks the right tools automatically and pays via x402.
 - "What's the market sentiment right now?"
 - "Forecast BTC for the next week"
 
-## Docker (SSE / HTTP Streamable Server)
+---
 
-For server deployments — n8n, OpenWebUI, multi-user setups. Exposes an HTTP server instead of stdio.
+## Docker (Server Mode)
+
+For server deployments — n8n, OpenWebUI, multi-user setups. Exposes HTTP instead of stdio.
 
 ### Quick start
 
@@ -157,7 +169,7 @@ docker run -d \
   asrai-mcp-server
 ```
 
-### docker-compose (recommended for production)
+### docker-compose
 
 ```yaml
 services:
@@ -193,26 +205,12 @@ docker compose up -d
 | `/generate-wallet` | POST | none — generates a new wallet |
 | `/health` | GET | none |
 
-Each user connects with their **own** private key in the URL — payments come from their own wallet automatically.
-
-### Connect Claude Desktop to the server
-
-```json
-{
-  "mcpServers": {
-    "asrai": {
-      "url": "https://mcp.asrai.me/mcp?key=0x<YOUR_PRIVATE_KEY>",
-      "transport": "streamable-http"
-    }
-  }
-}
-```
+Each user connects with their **own** private key — payments come from their own wallet automatically.
 
 ### Environment variables
 
 | Variable | Default | Description |
 |---|---|---|
-| `PRIVATE_KEY` | — | Fallback key if none in URL |
 | `ASRAI_HOST` | `0.0.0.0` | Bind host |
 | `ASRAI_PORT` | `8402` | Bind port |
 | `ASRAI_MAX_SPEND` | `2.0` | Max USDC spend per session |
@@ -229,4 +227,4 @@ Each user connects with their **own** private key in the URL — payments come f
 
 - Website: [asrai.me](https://asrai.me)
 - Agents page: [asrai.me/agents](https://asrai.me/agents)
-- x402 info: [x402.org](https://x402.org)
+- x402 protocol: [x402.org](https://x402.org)

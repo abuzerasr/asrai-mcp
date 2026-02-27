@@ -13,7 +13,8 @@
     "asrai-mcp": "./bin/asrai-mcp.js"
   },
   "files": [
-    "bin/"
+    "bin/",
+    "README.md"
   ],
   "engines": {
     "node": ">=18"
