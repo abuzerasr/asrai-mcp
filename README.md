@@ -6,23 +6,35 @@ Each API endpoint costs **$0.001 USDC** on Base mainnet ($0.002 for `ask_ai`).
 
 ## Install
 
+Three options — pick one:
+
 ```bash
+# Option 1 — npx (recommended, no install needed — requires Node.js)
+npx -y asrai-mcp
+
+# Option 2 — uvx (no install needed — requires uv)
+uvx asrai-mcp
+
+# Option 3 — pip (traditional)
 pip install asrai-mcp
 ```
 
 ## Setup
 
-**Step 1 — Create a `.env` file** with your wallet private key:
+**Step 1 — Set your wallet private key**
+
+Either create a `.env` file:
 
 | OS | File location |
 |---|---|
-| macOS / Linux | `~/.env` (i.e. `/Users/yourname/.env`) |
+| macOS / Linux | `~/.env` or `.env` in your project |
 | Windows | `C:\Users\yourname\.env` |
 
-File contents:
 ```
 PRIVATE_KEY=0x<your_private_key>
 ```
+
+Or pass it inline in the config (see below).
 
 > You need an Ethereum wallet funded with USDC on Base mainnet.
 
@@ -40,7 +52,44 @@ Config file location:
 | Windows | `%APPDATA%\Claude\claude_desktop_config.json` |
 | Linux | `~/.config/Claude/claude_desktop_config.json` |
 
-Add this:
+**Option A — npx with key inline (recommended, no Python needed):**
+```json
+{
+  "mcpServers": {
+    "asrai": {
+      "command": "npx",
+      "args": ["-y", "asrai-mcp"],
+      "env": { "PRIVATE_KEY": "0x<YOUR_PRIVATE_KEY>" }
+    }
+  }
+}
+```
+
+**Option A2 — npx with .env file (key stored separately):**
+```json
+{
+  "mcpServers": {
+    "asrai": {
+      "command": "npx",
+      "args": ["-y", "asrai-mcp"]
+    }
+  }
+}
+```
+
+**Option B — Remote HTTP Streamable (no local install at all):**
+```json
+{
+  "mcpServers": {
+    "asrai": {
+      "url": "https://mcp.asrai.me/mcp?key=0x<YOUR_PRIVATE_KEY>",
+      "transport": "streamable-http"
+    }
+  }
+}
+```
+
+**Option C — pip install (classic):**
 ```json
 {
   "mcpServers": {
@@ -53,7 +102,7 @@ Add this:
 
 ### Cursor / Windsurf / any MCP client
 
-Same config block above, add it to the MCP settings of your client.
+Same config blocks above — add to the MCP settings of your client.
 
 ---
 
@@ -95,8 +144,89 @@ The agent picks the right tools automatically and pays via x402.
 - "What's the market sentiment right now?"
 - "Forecast BTC for the next week"
 
+## Docker (SSE / HTTP Streamable Server)
+
+For server deployments — n8n, OpenWebUI, multi-user setups. Exposes an HTTP server instead of stdio.
+
+### Quick start
+
+```bash
+docker run -d \
+  -p 8402:8402 \
+  --name asrai-mcp \
+  asrai-mcp-server
+```
+
+### docker-compose (recommended for production)
+
+```yaml
+services:
+  asrai-mcp-server:
+    build: .
+    image: asrai-mcp-server
+    container_name: asrai_mcp_server
+    environment:
+      - ASRAI_HOST=0.0.0.0
+      - ASRAI_PORT=8402
+      - ASRAI_MAX_SPEND=5.0   # max USDC per session
+    ports:
+      - "127.0.0.1:8402:8402"
+    restart: unless-stopped
+    networks:
+      - nginx_network
+
+networks:
+  nginx_network:
+    external: true
+```
+
+```bash
+docker compose up -d
+```
+
+### Endpoints
+
+| Endpoint | Transport | Auth |
+|---|---|---|
+| `/mcp?key=0x<key>` | HTTP Streamable (recommended) | key in URL |
+| `/sse?key=0x<key>` | SSE (legacy) | key in URL |
+| `/generate-wallet` | POST | none — generates a new wallet |
+| `/health` | GET | none |
+
+Each user connects with their **own** private key in the URL — payments come from their own wallet automatically.
+
+### Connect Claude Desktop to the server
+
+```json
+{
+  "mcpServers": {
+    "asrai": {
+      "url": "https://mcp.asrai.me/mcp?key=0x<YOUR_PRIVATE_KEY>",
+      "transport": "streamable-http"
+    }
+  }
+}
+```
+
+### Environment variables
+
+| Variable | Default | Description |
+|---|---|---|
+| `PRIVATE_KEY` | — | Fallback key if none in URL |
+| `ASRAI_HOST` | `0.0.0.0` | Bind host |
+| `ASRAI_PORT` | `8402` | Bind port |
+| `ASRAI_MAX_SPEND` | `2.0` | Max USDC spend per session |
+
+---
+
 ## Network
 
 - Chain: **Base mainnet**
 - Token: **USDC**
 - Facilitator: `https://facilitator.payai.network`
+
+## Links
+
+- Website: [asrai.me](https://asrai.me)
+- Agents page: [asrai.me/agents](https://asrai.me/agents)
+- x402 info: [x402.org](https://x402.org)
