@@ -270,35 +270,35 @@ async def call_tool(name: str, arguments: dict):
 
     try:
         if name == "market_overview":
-            result = await asyncio.wait_for(tools.market_overview(), timeout=55)
+            result = await asyncio.wait_for(tools.market_overview(), timeout=90)
         elif name == "technical_analysis":
-            result = await asyncio.wait_for(tools.technical_analysis(symbol, timeframe), timeout=55)
+            result = await asyncio.wait_for(tools.technical_analysis(symbol, timeframe), timeout=90)
         elif name == "sentiment":
-            result = await asyncio.wait_for(tools.sentiment(), timeout=55)
+            result = await asyncio.wait_for(tools.sentiment(), timeout=90)
         elif name == "forecast":
-            result = await asyncio.wait_for(tools.forecast(symbol), timeout=55)
+            result = await asyncio.wait_for(tools.forecast(symbol), timeout=90)
         elif name == "screener":
-            result = await asyncio.wait_for(tools.screener(arguments.get("screener_type", "")), timeout=55)
+            result = await asyncio.wait_for(tools.screener(arguments.get("screener_type", "")), timeout=90)
         elif name == "smart_money":
-            result = await asyncio.wait_for(tools.smart_money(symbol, timeframe), timeout=55)
+            result = await asyncio.wait_for(tools.smart_money(symbol, timeframe), timeout=90)
         elif name == "elliott_wave":
-            result = await asyncio.wait_for(tools.elliott_wave(symbol, timeframe), timeout=55)
+            result = await asyncio.wait_for(tools.elliott_wave(symbol, timeframe), timeout=90)
         elif name == "ichimoku":
-            result = await asyncio.wait_for(tools.ichimoku(symbol, timeframe), timeout=55)
+            result = await asyncio.wait_for(tools.ichimoku(symbol, timeframe), timeout=90)
         elif name == "cashflow":
-            result = await asyncio.wait_for(tools.cashflow(arguments.get("mode", "market"), symbol), timeout=55)
+            result = await asyncio.wait_for(tools.cashflow(arguments.get("mode", "market"), symbol), timeout=90)
         elif name == "coin_info":
-            result = await asyncio.wait_for(tools.coin_info(symbol), timeout=55)
+            result = await asyncio.wait_for(tools.coin_info(symbol), timeout=90)
         elif name == "dexscreener":
-            result = await asyncio.wait_for(tools.dexscreener(arguments.get("contract_address", ""), arguments.get("chain", "")), timeout=55)
+            result = await asyncio.wait_for(tools.dexscreener(arguments.get("contract_address", ""), arguments.get("chain", "")), timeout=90)
         elif name == "chain_tokens":
-            result = await asyncio.wait_for(tools.chain_tokens(arguments.get("chain", ""), arguments.get("max_mcap", "")), timeout=55)
+            result = await asyncio.wait_for(tools.chain_tokens(arguments.get("chain", ""), arguments.get("max_mcap", "")), timeout=90)
         elif name == "portfolio":
-            result = await asyncio.wait_for(tools.portfolio(arguments.get("symbol", "")), timeout=55)
+            result = await asyncio.wait_for(tools.portfolio(arguments.get("symbol", "")), timeout=90)
         elif name == "channel_summary":
-            result = await asyncio.wait_for(tools.channel_summary(), timeout=55)
+            result = await asyncio.wait_for(tools.channel_summary(), timeout=90)
         elif name == "ask_ai":
-            result = await asyncio.wait_for(tools.ask_ai(arguments.get("question", "")), timeout=55)
+            result = await asyncio.wait_for(tools.ask_ai(arguments.get("question", "")), timeout=90)
         elif name == "indicator_guide":
             result = await tools.indicator_guide(arguments.get("indicator", ""))
         else:

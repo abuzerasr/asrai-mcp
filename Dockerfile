@@ -3,7 +3,7 @@ FROM python:3.11-slim-bookworm
 WORKDIR /app
 
 # Install from PyPI
-RUN pip install --no-cache-dir "asrai-mcp[sse]==0.4.4"
+RUN pip install --no-cache-dir "asrai-mcp[sse]==0.4.5"
 
 EXPOSE 8402
 

@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "asrai-mcp"
-version = "0.4.4"
+version = "0.4.5"
 description = "Asrai crypto analysis MCP server — pay-per-use via x402 on Base"
 readme = "README.md"
 requires-python = ">=3.10"

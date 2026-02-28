@@ -1,6 +1,6 @@
 {
   "name": "asrai-mcp",
-  "version": "0.4.4",
+  "version": "0.4.5",
   "description": "Asrai crypto analysis MCP server — pay-per-use via x402 on Base (npx wrapper for Python package)",
   "keywords": ["mcp", "crypto", "asrai", "x402", "trading", "signals"],
   "homepage": "https://asrai.me/agents",
