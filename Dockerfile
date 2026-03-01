@@ -1,9 +1,9 @@
-FROM python:3.11-slim-bookworm
+FROM node:22-slim
 
 WORKDIR /app
 
-# Install from PyPI
-RUN pip install --no-cache-dir "asrai-mcp[sse]==0.4.5"
+# Install from npm
+RUN npm install -g asrai-mcp@0.5.2
 
 EXPOSE 8402
 

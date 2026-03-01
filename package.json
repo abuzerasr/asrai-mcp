@@ -1,0 +1,40 @@
+{
+  "name": "asrai-mcp",
+  "version": "0.5.2",
+  "description": "Asrai crypto analysis MCP server — pay-per-use via x402 on Base. Zero install: just npx.",
+  "keywords": [
+    "mcp",
+    "crypto",
+    "asrai",
+    "x402",
+    "trading",
+    "signals"
+  ],
+  "homepage": "https://asrai.me/agents",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/abuzerasr/asrai-mcp"
+  },
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "asrai-mcp": "./bin/asrai-mcp.js",
+    "asrai-mcp-server": "./bin/asrai-mcp-server.js"
+  },
+  "files": [
+    "bin/",
+    "src/",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.27.1",
+    "@x402/fetch": "^2.5.0",
+    "@x402/evm": "^2.5.0",
+    "viem": "^2.46.3",
+    "dotenv": "^16.0.0",
+    "express": "^4.21.0"
+  }
+}
