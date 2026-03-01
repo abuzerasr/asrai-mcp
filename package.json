@@ -1,6 +1,6 @@
 {
   "name": "asrai-mcp",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "description": "Asrai crypto analysis MCP server — pay-per-use via x402 on Base. Zero install: just npx.",
   "keywords": [
     "mcp",

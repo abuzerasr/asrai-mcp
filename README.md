@@ -6,7 +6,13 @@ Crypto market analysis MCP server for Claude Desktop — pay-per-use via x402 on
 
 ## Quick start
 
-**Step 1** — Add to Claude Desktop config (`~/Library/Application Support/Claude/claude_desktop_config.json`):
+**Step 1** — Add to your Claude Desktop config:
+
+| OS | Config path |
+|---|---|
+| macOS | `~/Library/Application Support/Claude/claude_desktop_config.json` |
+| Windows | `%APPDATA%\Claude\claude_desktop_config.json` |
+| Linux | `~/.config/Claude/claude_desktop_config.json` |
 
 ```json
 {
@@ -17,6 +23,23 @@ Crypto market analysis MCP server for Claude Desktop — pay-per-use via x402 on
       "env": {
         "PRIVATE_KEY": "0x<your_base_wallet_private_key>"
       }
+    }
+  }
+}
+```
+
+**Or** store your key in `~/.env` (loaded automatically — no `env` block needed in config):
+
+```
+PRIVATE_KEY=0x<your_base_wallet_private_key>
+```
+
+```json
+{
+  "mcpServers": {
+    "asrai": {
+      "command": "npx",
+      "args": ["-y", "asrai-mcp"]
     }
   }
 }
@@ -58,16 +81,6 @@ Default session cap: **$2.00 USDC**. To change:
   "PRIVATE_KEY": "0x...",
   "ASRAI_MAX_SPEND": "5.0"
 }
-```
-
-## Alternative install (if you prefer)
-
-```bash
-# via uvx (requires uv)
-uvx asrai-mcp
-
-# via pip
-pip install asrai-mcp
 ```
 
 ## Links
